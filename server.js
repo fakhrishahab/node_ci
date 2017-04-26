@@ -1,20 +1,32 @@
 var express		= require('express'),
 	path		= require('path'),
-	expressLayouts = require('express-ejs-layouts')
+	expressLayouts = require('express-ejs-layouts'),
+	bodyParser 	= require('body-parser'),
+	cookie 		= require('cookie-parser'),
 
 	routeIndex 	= require('./routes/index'),
 	routePerson = require('./routes/person'),
+
+	routePersonApi = require('./api/person'),
 	app 		= express();
 
 app.set('views', path.join(__dirname, 'dev/views'));
 app.set('view engine', 'ejs');
 app.use('/static', express.static(path.join(__dirname, './dist/static')));
 
+app.use(bodyParser.urlencoded({ extended : true }));
+app.use(bodyParser.json());
+app.use(cookie());
+
 app.use(expressLayouts);
 app.set('layout', 'layout/layout');
 
+app.set('title', 'Continuous Integration Research');
+
 app.use('/', routeIndex);
 app.use('/person', routePerson);
+
+app.use('/api/person', routePersonApi);
 
 app.use(function (err, req, res, next) {
 	console.error(err.stack)
@@ -25,7 +37,7 @@ app.use(function (err, req, res, next) {
 app.use(function(req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
-	res.send('Error : Not Found')
+	res.render('404')
 });
 
 // app.get('/user/:id', function (req, res, next) {

@@ -11,7 +11,10 @@ router.get('/', function(req, res, next){
 			uri : apiPath+'people'
 		},
 		function(err, response, body){
-			res.send(JSON.parse(body))
+			res.render('module/person_list',{
+				personList : JSON.parse(body)
+			})
+			// res.send(JSON.parse(body))
 		}
 	)
 	// res.render('module/person_list', {
@@ -21,12 +24,24 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/:id', function(req, res, next){
-	console.log('Search Person with ID number : ', req.params.id);
-	next();	
-}, function(req, res, next){
-	res.render('person', {
-		personId : req.params.id
-	});
+	request(
+		{
+			method: 'get',
+			uri : apiPath+'people/'+req.params.id	
+		},
+		function(err, response, body){
+			res.render('person', {
+				personId : req.params.id,
+				personData : JSON.parse(body)
+			})
+		}
+	)
+// 	console.log('Search Person with ID number : ', req.params.id);
+// 	next();	
+// }, function(req, res, next){
+// 	res.render('person', {
+// 		personId : req.params.id
+// 	});
 });
 
 module.exports = router;

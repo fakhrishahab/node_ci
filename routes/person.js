@@ -12,7 +12,6 @@ router.get('/', function(req, res, next){
 		},
 		function(err, response, body){
 			res.send(JSON.parse(body))
-			console.log(body)
 		}
 	)
 	// res.render('module/person_list', {
